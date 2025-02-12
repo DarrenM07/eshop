@@ -55,4 +55,10 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
+    @PostMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") String id) {
+        service.delete(id);  // Memanggil service untuk menghapus produk
+        return "redirect:/product/list";  // Redirect kembali ke halaman list
+    }
+
 }
