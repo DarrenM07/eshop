@@ -22,6 +22,14 @@
         <tr th:each="product: ${products}">
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productQuantity}"></td>
+            <td>
+                <a th:href="@{'/product/edit/' + ${product.productId}}" class="btn btn-warning btn-sm">Edit</a>
+                <form th:action="@{'/product/delete/' + ${product.productId}}" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this product?');"
+                      style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
