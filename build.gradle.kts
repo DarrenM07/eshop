@@ -1,15 +1,10 @@
-val seleniumJavaVersion = "4.14.1"
-val seleniumJupiterVersion = "5.0.1"
-val webdrivermanagerVersion = "5.6.3"
-val junitJupiterVersion = "5.9.1"
-
 plugins {
     java
     id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "id.ac.ui.cs.advprog"
+group = "id.ac.ui.cs.advprog" // Ensure this is correct
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -28,6 +23,10 @@ repositories {
     mavenCentral()
 }
 
+val seleniumVersion = "4.14.1"
+val seleniumJupiterVersion = "5.0.1"
+val webdrivermanagerVersion = "5.6.3"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -36,17 +35,19 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    testImplementation("org.seleniumhg.selenium:selenium-java:$seleniumJavaVersion")
+    testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumVersion")
     testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
     testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+
+    // Vulnerable dependencies updated (Check Maven Central for latest versions)
+    implementation("commons-io:commons-io:2.14.0") // Updated version
+    implementation("org.apache.commons:commons-compress:1.26.0") // Updated version
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78") // Updated version
 }
 
-tasks.register<Test>("unitTest"){
-    description = "Run unit tests."
+tasks.register<Test>("unitTest") {
+    description = "Runs unit tests."
     group = "verification"
 
     filter {
@@ -54,8 +55,8 @@ tasks.register<Test>("unitTest"){
     }
 }
 
-tasks.register<Test>("functionalTest"){
-    description = "Run functional tests."
+tasks.register<Test>("functionalTest") {
+    description = "Runs functional tests."
     group = "verification"
 
     filter {
