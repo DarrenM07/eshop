@@ -1,10 +1,11 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "id.ac.ui.cs.advprog" // Ensure this is correct
+group = "id.ac.ui.cs.advprog"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -46,6 +47,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk18on:1.78") // Updated version
 }
 
+// Registering unit tests and excluding functional tests
 tasks.register<Test>("unitTest") {
     description = "Runs unit tests."
     group = "verification"
@@ -55,6 +57,7 @@ tasks.register<Test>("unitTest") {
     }
 }
 
+// Registering functional tests
 tasks.register<Test>("functionalTest") {
     description = "Runs functional tests."
     group = "verification"
@@ -64,6 +67,15 @@ tasks.register<Test>("functionalTest") {
     }
 }
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
+// Configuring the built-in test task
+tasks.test {
+    filter {
+        excludeTestsMatching("*FunctionalTest")
+    }
+    finalizedBy(tasks.jacocoTestReport)  // Ensure jacocoTestReport runs after the test task
+}
+
+// Configuring the existing jacocoTestReport task
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)  // Ensure jacocoTestReport runs after the test task
 }
