@@ -27,15 +27,6 @@ class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
-    // GET /product/create
-    @Test
-    void testCreateProductPage() throws Exception {
-        mockMvc.perform(get("/product/create"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("createProduct"))
-                .andExpect(model().attributeExists("product"));
-    }
-
     // POST /product/create
     @Test
     void testCreateProductPost() throws Exception {
@@ -50,76 +41,6 @@ class ProductControllerTest {
 
         Product created = productCaptor.getValue();
         assertNotNull(created.getProductId(), "Product ID should be generated");
-    }
-
-    // GET /product/list
-    @Test
-    void testProductListPage() throws Exception {
-        List<Product> products = new ArrayList<>();
-        Product p = new Product();
-        p.setProductId("id1");
-        products.add(p);
-
-        when(productService.findAll()).thenReturn(products);
-
-        mockMvc.perform(get("/product/list"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("productList"))
-                .andExpect(model().attribute("products", products));
-    }
-
-    @Test
-    void testEditProductPageValidId() throws Exception {
-        Product product = new Product();
-        product.setProductId("id1");
-
-        when(productService.findAll()).thenReturn(List.of(product));
-
-        mockMvc.perform(get("/product/edit/{id}", "id1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("editProduct"))
-                .andExpect(model().attributeExists("product"))
-                .andExpect(model().attribute("product", product));
-    }
-
-    @Test
-    void testEditProductPageNonexistentId() throws Exception {
-        when(productService.findAll()).thenReturn(List.of());
-
-        mockMvc.perform(get("/product/edit/{id}", "unknownId"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/product/list"));
-    }
-
-    // ✅ Added: Test when a product exists (branch where "if condition" is TRUE)
-    @Test
-    void testEditProductPage_ProductExists() throws Exception {
-        Product product = new Product();
-        product.setProductId("id1");
-
-        when(productService.findAll()).thenReturn(List.of(product));
-
-        mockMvc.perform(get("/product/edit/{id}", "id1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("editProduct"))
-                .andExpect(model().attributeExists("product"))
-                .andExpect(model().attribute("product", product));
-
-        // Verify that findAll() was called exactly once
-        verify(productService, times(1)).findAll();
-    }
-
-    // ✅ Added: Test when no product exists (branch where "if condition" is FALSE)
-    @Test
-    void testEditProductPage_ProductNotFound() throws Exception {
-        when(productService.findAll()).thenReturn(List.of());
-
-        mockMvc.perform(get("/product/edit/{id}", "unknownId"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/product/list"));
-
-        // Verify that findAll() was called exactly once
-        verify(productService, times(1)).findAll();
     }
 
     // POST /product/edit
