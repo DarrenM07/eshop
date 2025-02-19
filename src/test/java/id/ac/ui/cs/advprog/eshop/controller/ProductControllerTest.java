@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,22 +40,16 @@ class ProductControllerTest {
     @Test
     void testCreateProductPost() throws Exception {
         mockMvc.perform(post("/product/create")
-                        .param("name", "Test Product")  // Remove if you don't have a 'name' field
-                        .param("price", "10.0"))        // Remove if you don't have a 'price' field
+                        .param("name", "Test Product")
+                        .param("price", "10.0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("list"));
 
-        // Capture the product passed to service.create
         ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
         verify(productService).create(productCaptor.capture());
 
         Product created = productCaptor.getValue();
-        // Always check productId is not null because controller generates UUID
         assertNotNull(created.getProductId(), "Product ID should be generated");
-
-        // If you have getName() / getPrice() in Product, you can re-enable:
-        // assertEquals("Test Product", created.getName());
-        // assertEquals(10.0, created.getPrice());
     }
 
     // GET /product/list
@@ -89,24 +82,53 @@ class ProductControllerTest {
                 .andExpect(model().attribute("product", product));
     }
 
-
     @Test
     void testEditProductPageNonexistentId() throws Exception {
-        when(productService.findAll()).thenReturn(List.of());  // No products exist
+        when(productService.findAll()).thenReturn(List.of());
 
         mockMvc.perform(get("/product/edit/{id}", "unknownId"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
     }
 
+    // ✅ Added: Test when a product exists (branch where "if condition" is TRUE)
+    @Test
+    void testEditProductPage_ProductExists() throws Exception {
+        Product product = new Product();
+        product.setProductId("id1");
+
+        when(productService.findAll()).thenReturn(List.of(product));
+
+        mockMvc.perform(get("/product/edit/{id}", "id1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("editProduct"))
+                .andExpect(model().attributeExists("product"))
+                .andExpect(model().attribute("product", product));
+
+        // Verify that findAll() was called exactly once
+        verify(productService, times(1)).findAll();
+    }
+
+    // ✅ Added: Test when no product exists (branch where "if condition" is FALSE)
+    @Test
+    void testEditProductPage_ProductNotFound() throws Exception {
+        when(productService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get("/product/edit/{id}", "unknownId"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/product/list"));
+
+        // Verify that findAll() was called exactly once
+        verify(productService, times(1)).findAll();
+    }
 
     // POST /product/edit
     @Test
     void testEditProductPost() throws Exception {
         mockMvc.perform(post("/product/edit")
                         .param("productId", "id1")
-                        .param("name", "Updated Product")  // Remove if you don't have a 'name' field
-                        .param("price", "20.0"))           // Remove if you don't have a 'price' field
+                        .param("name", "Updated Product")
+                        .param("price", "20.0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
 
@@ -115,10 +137,6 @@ class ProductControllerTest {
 
         Product updated = productCaptor.getValue();
         assertEquals("id1", updated.getProductId());
-
-        // If you have getName() / getPrice() in Product, you can re-enable:
-        // assertEquals("Updated Product", updated.getName());
-        // assertEquals(20.0, updated.getPrice());
     }
 
     // POST /product/delete/{id} - valid ID
