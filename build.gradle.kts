@@ -3,7 +3,6 @@ plugins {
     jacoco
     id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.sonarqube") version "6.0.1.5171"
 }
 
 group = "id.ac.ui.cs.advprog"
@@ -81,11 +80,15 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+plugins {
+    id("org.sonarqube") version "6.0.1.5171"
+}
+
 sonar {
     properties {
-        setProperty("sonar.projectKey", "DarrenM07_eshop")
-        setProperty("sonar.organization", "darrenm07")
-        setProperty("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.projectKey", "DarrenM07_eshop")
+        property("sonar.organization", "darrenm07")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
