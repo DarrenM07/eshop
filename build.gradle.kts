@@ -74,9 +74,11 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test) // Make sure jacocoTestReport runs after test
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+    }
 }
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
@@ -87,6 +89,7 @@ sonar {
         property("sonar.organization", "darrenm07")      // Your SonarCloud organization name
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.token", System.getenv("SONAR_TOKEN"))  // Use environment variable
+        property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
