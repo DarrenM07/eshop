@@ -1,5 +1,5 @@
 # eshop
-*ASSIGNMENT 1*
+**ASSIGNMENT 1**
 
 Reflection 1
 
@@ -19,6 +19,6 @@ How do we make sure our unit tests are enough?
 
 A good way to check is by using code coverage tools like JaCoCo. These tools show what percentage of the code is actually being tested. But having 100% coverage doesn’t mean the code is bug-free—it just means every line was executed during testing. We still need to consider edge cases, unexpected inputs, and real-world scenarios to make our tests meaningful.
 
-*ASSIGNMENT 2*
+**ASSIGNMENT 2**
 
 During the exercise, I addressed several code quality issues, notably replacing the repeated literal string "redirect:/product/list" with a constant (REDIRECT_PRODUCT_LIST) to eliminate redundancy and improve maintainability. I also identified and filled test coverage gaps by adding tests for edge cases, such as when a product’s ID is null during the edit flow, ensuring that all controller methods have 100% code coverage. Moreover, the CI/CD pipeline is set up to automatically run test suites, analyze code quality, and deploy the application to a PaaS, which embodies the principles of Continuous Integration and Continuous Deployment. Every commit triggers these automated processes, catching issues early and ensuring that successful builds are seamlessly deployed to production without manual intervention, keeping the software in a reliably deployable state at all times.
