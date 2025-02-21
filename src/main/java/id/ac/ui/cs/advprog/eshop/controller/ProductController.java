@@ -14,6 +14,8 @@ import java.util.UUID;
 @RequestMapping("/product")
 public class ProductController {
 
+    private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+
     @Autowired
     private ProductService service;
 
@@ -24,11 +26,11 @@ public class ProductController {
         return "CreateProduct";
     }
 
-    @PostMapping( "/create")
+    @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
         product.setProductId(UUID.randomUUID().toString());
         service.create(product);
-        return "redirect:list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @GetMapping("/list")
@@ -47,20 +49,18 @@ public class ProductController {
                 return "EditProduct";
             }
         }
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
+
     @PostMapping("/edit")
     public String editProductPost(@ModelAttribute Product product) {
         service.update(product);
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") String id) {
-        service.delete(id);  // Memanggil service untuk menghapus produk
-        return "redirect:/product/list";  // Redirect kembali ke halaman list
+        service.delete(id);
+        return REDIRECT_PRODUCT_LIST;
     }
-
 }
-
-
