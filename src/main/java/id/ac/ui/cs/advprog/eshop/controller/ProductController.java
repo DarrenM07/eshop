@@ -83,7 +83,7 @@ public class ProductController {
             return "redirect:listCar";
         }
 
-        @GetMapping("/ListCar")
+        @GetMapping("/listCar")
         public String carListPage(Model model) {
             List<Car> allCars = carService.findAll();
             model.addAttribute("cars", allCars);

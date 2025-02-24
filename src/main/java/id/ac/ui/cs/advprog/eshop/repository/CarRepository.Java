@@ -1,4 +1,5 @@
 package id.ac.ui.cs.advprog.eshop.repository;
+
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class CarRepository {
 
     static int id = 0;
-
+    
     private List<Car> carData = new ArrayList<>();
 
     public Car create(Car car) {
@@ -26,29 +27,27 @@ public class CarRepository {
         return carData.iterator();
     }
 
-    public Car findById(String id) {
+    public Car findById(String carId) {
         for (Car car : carData) {
-            if (car.getCarId().equals(id)) {
+            if (car.getCarId().equals(carId)) {
                 return car;
             }
         }
-        return null;
+        return null; // Car not found
     }
 
-    public Car update(String id, Car updatedCar) {
+    public void update(String carId, Car updatedCar) {
         for (int i = 0; i < carData.size(); i++) {
             Car car = carData.get(i);
-            if (car.getCarId().equals(id)) {
-                car.setCarName(updatedCar.getCarName());
-                car.setCarColor(updatedCar.getCarColor());
-                car.setCarQuantity(updatedCar.getCarQuantity());
-                return car;
+            if (car.getCarId().equals(carId)) {
+                // Update the existing car with the new data
+                carData.set(i, updatedCar);
+                return; // Update successful
             }
         }
-        return null; // Handle the case where the car is not found
     }
 
-    public void delete(String id) {
-        carData.removeIf(car -> car.getCarId().equals(id));
+    public void delete(String carId) {
+        carData.removeIf(car -> car.getCarId().equals(carId));
     }
 }
