@@ -89,13 +89,15 @@ public class ProductControllerTest {
 
         mockMvc.perform(post("/product/edit")
                         .param("productId", "123")
-                        .param("name", "Updated Product"))
+                        .param("productName", "Updated Product"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
 
-        // Verifikasi produk diupdate
+        // Verify the product is updated
         List<Product> products = productService.findAll();
-        assertTrue(products.stream().anyMatch(p -> p.getProductId().equals("123") && p.getProductName().equals("Updated Product")),
+        assertTrue(products.stream()
+                        .anyMatch(p -> p.getProductId().equals("123") &&
+                                p.getProductName().equals("Updated Product")),
                 "Product should be updated with new name");
     }
 
