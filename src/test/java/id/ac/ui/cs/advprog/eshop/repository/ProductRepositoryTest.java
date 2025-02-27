@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -134,7 +135,7 @@ class ProductRepositoryTest {
         productRepository.create(product);
 
         // Delete the product.
-        boolean deleteResult = productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        void deleteResult = productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
         assertTrue(deleteResult, "Expected deletion to succeed");
 
         // Verify the repository is empty.
@@ -144,17 +145,37 @@ class ProductRepositoryTest {
 
     @Test
     void testDeleteProductNegative() {
+        // Set up repository with one product.
+        Product p = new Product();
+        p.setProductId("first-id");
+        productRepository.create(p);
+
+        // Count products before deletion.
+        int countBefore = 0;
+        Iterator<Product> iteratorBefore = productRepository.findAll();
+        while (iteratorBefore.hasNext()) {
+            iteratorBefore.next();
+            countBefore++;
+        }
+
         // Attempt to delete a non-existent product.
-        boolean deleteResult = productRepository.delete("non-existent-id");
-        assertFalse(deleteResult, "Expected deletion to fail for a non-existent product");
+        productRepository.delete("non-existent-id");
+
+        // Count products after deletion.
+        int countAfter = 0;
+        Iterator<Product> iteratorAfter = productRepository.findAll();
+        while (iteratorAfter.hasNext()) {
+            iteratorAfter.next();
+            countAfter++;
+        }
+
+        // Verify that the repository still contains the same number of products.
+        assertEquals(countBefore, countAfter, "Deletion of a non-existent product should not change the repository count");
     }
 
-    /**
-     * Forces the loop in delete(...) to skip the first product and then match the second.
-     */
     @Test
     void testDeleteSecondProduct() {
-        // Create two products
+        // Create two products.
         Product p1 = new Product();
         p1.setProductId("first-id");
         productRepository.create(p1);
@@ -163,9 +184,22 @@ class ProductRepositoryTest {
         p2.setProductId("second-id");
         productRepository.create(p2);
 
-        // Attempt to delete the second product
-        boolean deleteResult = productRepository.delete("second-id");
-        assertTrue(deleteResult, "Expected to successfully delete the second product");
+        // Delete the product with id "second-id".
+        productRepository.delete("second-id");
+
+        // Verify that "second-id" is no longer in the repository.
+        boolean foundSecond = false;
+        Iterator<Product> iterator = productRepository.findAll();
+        while (iterator.hasNext()) {
+            Product product = iterator.next();
+            if (product.getProductId().equals("second-id")) {
+                foundSecond = true;
+                break;
+            }
+        }
+        assertFalse(foundSecond, "Expected to successfully delete the second product");
+    }
+
 
         // Verify only the first product remains
         Iterator<Product> productIterator = productRepository.findAll();

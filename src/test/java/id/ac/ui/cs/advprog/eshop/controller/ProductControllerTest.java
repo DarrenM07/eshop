@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,7 +95,7 @@ public class ProductControllerTest {
                 .andExpect(redirectedUrl("/product/list"));
 
         // Verify the product is updated
-        List<Product> products = productService.findAll();
+        Iterator<Product> products = productService.findAll();
         assertTrue(products.stream()
                         .anyMatch(p -> p.getProductId().equals("123") &&
                                 p.getProductName().equals("Updated Product")),
