@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository
-public class ProductRepository {
+public class ProductRepository implements InterfaceProductRepository {
     private List<Product> productData = new ArrayList<>();
 
     public Product create(Product product) {
@@ -18,6 +18,11 @@ public class ProductRepository {
 
     public Iterator<Product> findAll() {
         return productData.iterator(); // Added return statement
+    }
+
+    @Override
+    public Product findById(String productId) {
+        return null;
     }
 
     public Product update(Product updatedProduct) {
