@@ -17,8 +17,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product create(Product product) {
-        productRepository.create(product);
-        return product;
+        return productRepository.create(product);
     }
 
     @Override
@@ -31,8 +30,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product update(Product product) {
-        return productRepository.update(product);
+        // Extract productId from the product and call repository update.
+        return productRepository.update(product.getProductId(), product);
     }
+
 
     @Override
     public void delete(String productId) {

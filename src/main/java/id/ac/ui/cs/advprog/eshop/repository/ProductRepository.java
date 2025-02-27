@@ -11,11 +11,13 @@ import java.util.List;
 public class ProductRepository implements InterfaceProductRepository {
     private List<Product> productData = new ArrayList<>();
 
+    @Override
     public Product create(Product product) {
         productData.add(product);
         return product;
     }
 
+    @Override
     public Iterator<Product> findAll() {
         return productData.iterator(); // Added return statement
     }
@@ -25,7 +27,7 @@ public class ProductRepository implements InterfaceProductRepository {
         return null;
     }
 
-    public Product update(Product updatedProduct) {
+    public Product update(String productId, Product updatedProduct) {
         for (Product product : productData) {
             if (product.getProductId().equals(updatedProduct.getProductId())) {
                 product.setProductName(updatedProduct.getProductName());

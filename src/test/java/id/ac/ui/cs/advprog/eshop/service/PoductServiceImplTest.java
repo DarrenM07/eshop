@@ -76,22 +76,28 @@ class ProductServiceImplTest {
     /** ✅ Test: update() should return updated product */
     @Test
     void testUpdate() {
-        when(productRepository.update(product1)).thenReturn(product1);
+        // Arrange: when update is called with product1's ID and product1, return product1.
+        when(productRepository.update(product1.getProductId(), product1)).thenReturn(product1);
 
+        // Act: Call the service's update method.
         Product result = productService.update(product1);
 
-        verify(productRepository, times(1)).update(product1);
+        // Assert: Verify that the repository's update was called with the correct arguments and returned product1.
+        verify(productRepository, times(1)).update(product1.getProductId(), product1);
         assertEquals(product1, result);
     }
 
     /** ✅ Test: update() should return null if product not found */
     @Test
     void testUpdateNotFound() {
-        when(productRepository.update(product1)).thenReturn(null);
+        // Arrange: when update is called with product1's ID and product1, return null.
+        when(productRepository.update(product1.getProductId(), product1)).thenReturn(null);
 
+        // Act: Call the service's update method.
         Product result = productService.update(product1);
 
-        verify(productRepository, times(1)).update(product1);
+        // Assert: Verify that the repository's update was called with the correct arguments and returned null.
+        verify(productRepository, times(1)).update(product1.getProductId(), product1);
         assertNull(result);
     }
 

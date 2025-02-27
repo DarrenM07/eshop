@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductRepositoryTest {
 
-    private ProductRepository productRepository;
+    private InterfaceProductRepository productRepository = new ProductRepository();
 
     @BeforeEach
     void setUp() {
@@ -75,13 +75,15 @@ class ProductRepositoryTest {
         // Update the product with the same ID.
         product.setProductName("Sampo Cap Bambang Updated");
         product.setProductQuantity(120);
-        Product result = productRepository.update(product);
+        // Call update with productId and product.
+        Product result = productRepository.update(product.getProductId(), product);
 
         // Verify that the update occurred.
         assertNotNull(result, "Expected the product to be updated");
         assertEquals("Sampo Cap Bambang Updated", result.getProductName());
         assertEquals(120, result.getProductQuantity());
     }
+
 
     @Test
     void testUpdateProductNegative() {
@@ -91,9 +93,11 @@ class ProductRepositoryTest {
         nonExistentProduct.setProductName("Fake Product");
         nonExistentProduct.setProductQuantity(999);
 
-        Product result = productRepository.update(nonExistentProduct);
+        // Call update with both the product ID and the product
+        Product result = productRepository.update(nonExistentProduct.getProductId(), nonExistentProduct);
         assertNull(result, "Expected null when updating a non-existent product");
     }
+
 
     /**
      * Forces the loop in update(...) to skip the first product and then match the second.
@@ -119,11 +123,13 @@ class ProductRepositoryTest {
         updatedP2.setProductName("Second Product Updated");
         updatedP2.setProductQuantity(99);
 
-        Product result = productRepository.update(updatedP2);
+        // Pass both the product ID and updated product to the update method
+        Product result = productRepository.update(updatedP2.getProductId(), updatedP2);
         assertNotNull(result, "Expected to successfully update the second product");
         assertEquals("Second Product Updated", result.getProductName());
         assertEquals(99, result.getProductQuantity());
     }
+
 
     @Test
     void testDeleteProductPositive() {
@@ -135,7 +141,7 @@ class ProductRepositoryTest {
         productRepository.create(product);
 
         // Delete the product.
-        void deleteResult = productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        boolean deleteResult = productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
         assertTrue(deleteResult, "Expected deletion to succeed");
 
         // Verify the repository is empty.
@@ -198,10 +204,8 @@ class ProductRepositoryTest {
             }
         }
         assertFalse(foundSecond, "Expected to successfully delete the second product");
-    }
 
-
-        // Verify only the first product remains
+        // Verify only the first product remains.
         Iterator<Product> productIterator = productRepository.findAll();
         assertTrue(productIterator.hasNext(), "Expected one product remaining");
         Product remaining = productIterator.next();

@@ -95,12 +95,13 @@ public class ProductControllerTest {
                 .andExpect(redirectedUrl("/product/list"));
 
         // Verify the product is updated
-        Iterator<Product> products = productService.findAll();
+        List<Product> products = productService.findAll();
         assertTrue(products.stream()
                         .anyMatch(p -> p.getProductId().equals("123") &&
                                 p.getProductName().equals("Updated Product")),
                 "Product should be updated with new name");
     }
+
 
     @Test
     public void testDeleteProduct() throws Exception {
