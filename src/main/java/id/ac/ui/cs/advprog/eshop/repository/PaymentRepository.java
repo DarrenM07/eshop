@@ -35,7 +35,7 @@ public class PaymentRepository {
         paymentList.add(payment);
         return payment;
     }
-    public Payment findById(String id){
+    public Payment getPayment(String id){
         for (Payment savedPayment : paymentList) {
             if (savedPayment.getId().equals(id)) {
                 return savedPayment;
@@ -43,7 +43,7 @@ public class PaymentRepository {
         }
         return null;
     }
-    public List<Payment> findAll(){
+    public List<Payment> getAllPayments(){
         List <Payment> result = new ArrayList<>(paymentList);
         return result ;
     }
