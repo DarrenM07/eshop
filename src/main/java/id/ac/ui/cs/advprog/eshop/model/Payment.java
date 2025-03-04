@@ -1,5 +1,8 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import enums.PaymentMethod;
+import enums.PaymentStatus;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +19,7 @@ public class Payment {
     public Payment(String id, String method,Map<String, String> paymentData){
         this.id = id;
         this.setMethod(method);
-        this.status = "CHECKING_PAYMENT";
+        this.status = PaymentStatus.CHECK_PAYMENT.getValue();
         this.paymentData = paymentData;
     }
     public Payment(String id, String method,String status, Map<String, String> paymentData){
@@ -32,7 +35,7 @@ public class Payment {
         }
     }
     public void setMethod(String method){
-        if (method.equals("VOUCHER") || method.equals("CASH")){
+        if (PaymentMethod.contains(method)){
             this.method = method;
         }
         else{

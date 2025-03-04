@@ -18,20 +18,20 @@ public class PaymentTest {
         assertEquals("1", payment.getId());
         assertEquals("VOUCHER", payment.getMethod());
         assertEquals("ESHOP1234ABC5678", payment.getPaymentData().get("VoucherCode"));
-        assertEquals("CHECKING_PAYMENT", payment.getStatus());
+        assertEquals("CHECK_PAYMENT", payment.getStatus());
     }
     @Test
     public void testCODPaymentDefault(){
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("deliveryFee", "10");
         paymentData.put("address", "Petogogan");
-        Payment payment = new Payment("2", "CASH", paymentData);
+        Payment payment = new Payment("2", "COD", paymentData);
 
         assertTrue(payment.getPaymentData().containsKey("deliveryFee"));
         assertTrue(payment.getPaymentData().containsKey("address"));
-        assertEquals("CHECKING_PAYMENT", payment.getStatus());
+        assertEquals("CHECK_PAYMENT", payment.getStatus());
         assertEquals("2", payment.getId());
-        assertEquals("CASH", payment.getMethod());
+        assertEquals("COD", payment.getMethod());
         assertEquals("Petogogan", payment.getPaymentData().get("address"));
         assertEquals("10", payment.getPaymentData().get("deliveryFee"));
     }
