@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.model.Payment;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
@@ -15,8 +16,8 @@ public class PaymentTest {
         Payment payment = new Payment("1", "VOUCHER",paymentData);
         assertTrue(payment.getPaymentData().containsKey("VoucherCode"));
         assertEquals("1", payment.getId());
-        assertEquals("VOUCHER", payment.getOrderId());
-        assertEquals(paymentData, payment.getPaymentData().get("VoucherCode"));
+        assertEquals("VOUCHER", payment.getMethod());
+        assertEquals("ESHOP1234ABC5678", payment.getPaymentData().get("VoucherCode"));
         assertEquals("CHECKING_PAYMENT", payment.getStatus());
     }
     @Test
@@ -47,8 +48,7 @@ public class PaymentTest {
         assertThrows (IllegalArgumentException.class, () -> {
             Map<String, String> paymentData = new HashMap<>();
             paymentData.put("VoucherCode", "ESHOP1234ABC5678");
-            Payment payment = new Payment("1", "VOUCHER", paymentData);
-
+            Payment payment = new Payment("1", "VOUCHER", "INVALID_STATUS" ,paymentData);
         });
     }
     @Test
