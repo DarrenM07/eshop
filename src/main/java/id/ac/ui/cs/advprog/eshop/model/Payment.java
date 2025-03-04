@@ -27,7 +27,7 @@ public class Payment {
         this.setStatus(status);
     }
     public void setStatus(String status){
-        if (status.equals("SUCCESS") || status.equals("REJECTED")){
+        if (PaymentStatus.contains(status)){
             this.status = status;
         }
         else{

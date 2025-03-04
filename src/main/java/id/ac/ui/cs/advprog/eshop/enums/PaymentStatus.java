@@ -6,8 +6,7 @@ import lombok.Getter;
 public enum PaymentStatus {
     CHECK_PAYMENT("CHECK_PAYMENT"),
     REJECTED("REJECTED"),
-    SUCCESS("SUCCESS"),
-    INVALID_STATUS("INVALID_STATUS");
+    SUCCESS("SUCCESS");
 
     private final String value;
     private PaymentStatus(String value){
