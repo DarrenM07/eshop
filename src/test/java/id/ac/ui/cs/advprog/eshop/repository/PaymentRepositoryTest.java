@@ -33,10 +33,10 @@ public class PaymentRepositoryTest {
     }
     @Test
     void testSaveCreate(){
-        Payment payment = payments.get(1);
+        Payment payment = payments.get(0);
         Payment result = paymentRepository.save(payment);
 
-        Payment findResult = paymentRepository.findById(payments.get(1).getId());
+        Payment findResult = paymentRepository.findById(payments.get(0).getId());
         assertEquals(payment.getId(), result.getId());
         assertEquals(payment.getId(), findResult.getId());
         assertEquals(payment.getMethod(), findResult.getMethod());
@@ -69,7 +69,7 @@ public class PaymentRepositoryTest {
         assertEquals(tempPayment.getId(), result.getId());
         assertEquals(tempPayment.getMethod(), result.getMethod());
         assertEquals(tempPayment.getPaymentData().get("address"), result.getPaymentData().get("address") );
-        assertEquals(tempPayment.getPaymentData().get("address"), result.getPaymentData().get("deliveryFee") );
+        assertEquals(tempPayment.getPaymentData().get("deliveryFee"), result.getPaymentData().get("deliveryFee") );
         assertTrue(result.getPaymentData().get("address").isEmpty());
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
@@ -85,7 +85,7 @@ public class PaymentRepositoryTest {
         assertEquals(tempPayment.getId(), result.getId());
         assertEquals(tempPayment.getMethod(), result.getMethod());
         assertEquals(tempPayment.getPaymentData().get("address"), result.getPaymentData().get("address") );
-        assertEquals(tempPayment.getPaymentData().get("address"), result.getPaymentData().get("deliveryFee") );
+        assertEquals(tempPayment.getPaymentData().get("deliveryFee"), result.getPaymentData().get("deliveryFee") );
         assertTrue(result.getPaymentData().get("deliveryFee").isEmpty());
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
