@@ -101,10 +101,11 @@ class CarServiceImplTest {
 
     @Test
     void testDeleteCarById() {
-        doNothing().when(carRepository).delete("C001");
+        when(carRepository.delete("C001")).thenReturn(true);
 
         carService.deleteCarById("C001");
 
         verify(carRepository, times(1)).delete("C001");
     }
+
 }
