@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order History</title>
+</head>
+<body>
+<h1>Order History</h1>
+<form th:action="@{/order/history}" method="post">
+    <div>
+        <label>Enter your name:</label>
+        <input type="text" name="author" placeholder="Your Name" required />
+    </div>
+    <div>
+        <button type="submit">Show My Orders</button>
+    </div>
+</form>
+</body>
+</html>

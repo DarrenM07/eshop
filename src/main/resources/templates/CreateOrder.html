@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+</head>
+<body>
+<h1>Create Order</h1>
+<form th:action="@{/order/create}" th:object="${order}" method="post">
+    <div>
+        <label>Order ID:</label>
+        <input type="text" th:field="*{id}" placeholder="Enter Order ID" required />
+    </div>
+    <div>
+        <label>Author Name:</label>
+        <input type="text" th:field="*{author}" placeholder="Your Name" required />
+    </div>
+    <!--
+         Since Order must have at least one product, you might provide a simple way to add products.
+         This example assumes you'll later process the products field appropriately.
+    -->
+    <div>
+        <label>Products (Comma-Separated IDs):</label>
+        <input type="text" name="products" placeholder="e.g., P001,P002" required />
+    </div>
+    <div>
+        <button type="submit">Create Order</button>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay Order</title>
+</head>
+<body>
+<h1>Pay for Order <span th:text="${order.id}"></span></h1>
+<div>
+    <p>Author: <span th:text="${order.author}"></span></p>
+    <p>Status: <span th:text="${order.status}"></span></p>
+    <p>Order Time: <span th:text="${order.orderTime}"></span></p>
+</div>
+<form th:action="@{'/order/pay/' + ${order.id}}" method="post">
+    <!-- You may add extra inputs if needed (e.g., payment method, voucher code, etc.) -->
+    <div>
+        <button type="submit">Pay Now</button>
+    </div>
+</form>
+</body>
+</html>
