@@ -35,16 +35,18 @@ public class OrderControllerTest {
         // Create a dummy product list (assuming Product has a default constructor)
         List<Product> products = new ArrayList<>();
         products.add(new Product());
-        // Build a test order with a fixed id and author
+        // Build a test order with a fixed id, author, and valid status
         testOrder = Order.builder()
                 .id("TEST_ORDER_001")
                 .products(products)
                 .orderTime(System.currentTimeMillis())
                 .author("TestUser")
+                .status("WAITING_PAYMENT") // set a valid status explicitly
                 .build();
         // Save the test order using OrderService
         orderService.createOrder(testOrder);
     }
+
 
     @Test
     public void testShowCreateOrderForm() throws Exception {

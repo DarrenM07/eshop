@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Product;
+import enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,60 +20,61 @@ public class OrderController {
     private OrderService orderService;
 
     // GET /order/create
-    // Displays the form to create a new Order.
+    // Displays the create order form.
     @GetMapping("/create")
     public String showCreateOrderForm(Model model) {
-        // To avoid IllegalArgumentException in Order constructor (empty product list not allowed),
-        // we supply a default non-empty list with a dummy Product.
-        List<Product> defaultProducts = new ArrayList<>();
-        defaultProducts.add(new Product()); // Assumes Product has a default constructor.
+        // Since Order constructor does not allow an empty product list,
+        // we supply a dummy product to satisfy the requirement.
+        List<Product> dummyProducts = new ArrayList<>();
+        dummyProducts.add(new Product());
         Order order = Order.builder()
                 .id("")
-                .products(defaultProducts)
+                .products(dummyProducts)
                 .orderTime(System.currentTimeMillis())
                 .author("")
+                .status(OrderStatus.WAITING_PAYMENT.getValue()) // explicitly set valid status
                 .build();
         model.addAttribute("order", order);
-        return "CreateOrder"; // Name of your Thymeleaf template for creating orders.
+        return "CreateOrder";
     }
 
     // GET /order/history
-    // Displays a form where the user inputs their name to view order history.
+    // Shows the form for the user to input their name to view order history.
     @GetMapping("/history")
-    public String showOrderHistoryForm(Model model) {
-        return "OrderHistory"; // Thymeleaf template for inputting author name.
+    public String showOrderHistoryForm() {
+        return "OrderHistory";
     }
 
     // POST /order/history
-    // Processes the form and shows all orders made by the specified author.
+    // Processes the form submission and displays orders for the provided author.
     @PostMapping("/history")
     public String processOrderHistory(@RequestParam("author") String author, Model model) {
         List<Order> orders = orderService.findAllByAuthor(author);
         model.addAttribute("orders", orders);
         model.addAttribute("author", author);
-        return "OrderHistoryResult"; // Template that displays orders for the author.
+        return "OrderHistoryResult";
     }
 
     // GET /order/pay/{orderId}
-    // Displays the payment order page for the given order.
+    // Displays the payment page for a given order.
     @GetMapping("/pay/{orderId}")
     public String showOrderPayPage(@PathVariable String orderId, Model model) {
         Order order = orderService.findById(orderId);
         if (order == null) {
-            // Optionally handle order not found, e.g., redirect to history page.
+            // If the order is not found, redirect to order history form.
             return "redirect:/order/history";
         }
         model.addAttribute("order", order);
-        return "OrderPay"; // Template for paying an order.
+        return "OrderPay";
     }
 
     // POST /order/pay/{orderId}
-    // Processes the payment request and returns a page showing a generated payment ID.
+    // Processes the payment request and returns a page with a generated payment ID.
     @PostMapping("/pay/{orderId}")
     public String processOrderPayment(@PathVariable String orderId, Model model) {
-        // Simulate payment processing by generating a dummy payment ID.
+        // Simulate payment processing by generating a dummy payment ID using the order ID.
         String paymentId = "PAY-" + orderId;
         model.addAttribute("paymentId", paymentId);
-        return "PaymentResult"; // Template displaying the payment ID.
+        return "PaymentResult";
     }
 }
