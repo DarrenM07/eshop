@@ -5,10 +5,23 @@
     <title>Payment Detail Form</title>
 </head>
 <body>
-<h1>Payment Detail Form</h1>
+<h1>Enter Payment Details</h1>
 <form th:action="@{/payment/detail}" th:object="${payment}" method="post">
-    <!-- Your form fields go here -->
-    <button type="submit">Submit</button>
+    <div>
+        <label>Payment ID:</label>
+        <input type="text" th:field="*{id}" placeholder="Enter Payment ID" />
+    </div>
+    <div>
+        <label>Method:</label>
+        <select th:field="*{method}">
+            <option value="VOUCHER">Voucher</option>
+            <option value="COD">Cash On Delivery</option>
+        </select>
+    </div>
+    <!-- Add more fields for paymentData if needed -->
+    <div>
+        <button type="submit">Submit Payment Details</button>
+    </div>
 </form>
 </body>
 </html>

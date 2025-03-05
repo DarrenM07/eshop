@@ -5,8 +5,11 @@
     <title>Payment Detail Result</title>
 </head>
 <body>
-<h1>Payment Detail Result</h1>
+<h1>Payment Details</h1>
 <p>Payment ID: <span th:text="${payment.id}"></span></p>
-<!-- Add more details as needed -->
+<p>Method: <span th:text="${payment.method}"></span></p>
+<p>Status: <span th:text="${payment.status}"></span></p>
+<!-- Display additional payment data as needed -->
+<a th:href="@{/}">Back to Home</a>
 </body>
 </html>

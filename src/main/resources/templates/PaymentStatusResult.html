@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Payment Status Result</title>
+    <title>Payment Status Updated</title>
 </head>
 <body>
 <h1>Payment Status Updated</h1>
 <p>Payment ID: <span th:text="${payment.id}"></span></p>
 <p>New Status: <span th:text="${payment.status}"></span></p>
+<a th:href="@{/payment/admin/list}">Back to Payment List</a>
 </body>
 </html>
