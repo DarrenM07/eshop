@@ -49,9 +49,9 @@ public class PaymentControllerTest {
                 .build();
         // Create dummy payment data.
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("VoucherCode", "ESHOP1234ABCD5678");
-        // Create a payment via PaymentService.
+        paymentData.put("VoucherCode", "ESHOP1234ABCD567");
         testPayment = paymentService.addPayment(dummyOrder, "VOUCHER", paymentData);
+
     }
 
     // GET /payment/detail

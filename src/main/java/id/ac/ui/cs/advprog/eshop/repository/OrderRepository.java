@@ -28,7 +28,7 @@ public class OrderRepository {
 
     public Order findById(String id) {
         for (Order savedOrder : orderData) {
-            if (savedOrder.getId().equals(id)) {
+            if (savedOrder != null && savedOrder.getId().equals(id)) {
                 return savedOrder;
             }
         }

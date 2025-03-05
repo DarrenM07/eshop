@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Detail Form</title>
+</head>
+<body>
+<h1>Payment Detail Form</h1>
+<form th:action="@{/payment/detail}" th:object="${payment}" method="post">
+    <!-- Your form fields go here -->
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

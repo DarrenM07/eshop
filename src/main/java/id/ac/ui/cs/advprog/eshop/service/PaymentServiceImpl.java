@@ -21,17 +21,28 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
+        // Save the order first if it’s not already saved.
+        if (orderRepository.findById(order.getId()) == null) {
+            orderRepository.save(order);
+        }
         Payment payment = new Payment(order.getId(), method, paymentData);
         paymentRepository.save(payment);
         return payment;
     }
+
     @Override
     public Payment setStatus(Payment payment, String status) {
         payment.setStatus(status);
         paymentRepository.save(payment);
-        orderRepository.save(orderRepository.findById(payment.getId()));
+        Order order = orderRepository.findById(payment.getId());
+        if (order != null) {
+            String newOrderStatus = checkStatus(status);
+            order.setStatus(newOrderStatus);
+            orderRepository.save(order);
+        }
         return payment;
     }
+
     private String checkStatus(String paymentStatus){
         if (paymentStatus.equals(PaymentStatus.SUCCESS.getValue())){
             return OrderStatus.SUCCESS.getValue();

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
@@ -15,53 +17,54 @@ public class PaymentController {
     private PaymentService paymentService;
 
     // GET /payment/detail
-    // Shows a form to input a payment ID for detail lookup.
+    // Shows the payment detail form.
     @GetMapping("/detail")
     public String showPaymentDetailForm(Model model) {
-        // You can pass an empty Payment or simply show a form.
-        model.addAttribute("payment", new Payment("", "", null));
-        return "PaymentDetail"; // Thymeleaf template for payment detail form.
+        // Create a dummy Payment object for form binding.
+        // Since Payment requires an id, method, and paymentData,
+        // we provide empty values.
+        model.addAttribute("payment", new Payment("", "COD", new HashMap<>()));
+        return "PaymentDetail";  // Thymeleaf template for the detail form.
     }
 
     // GET /payment/detail/{paymentId}
-    // Displays the details of a payment based on its ID.
+    // Shows the details of a payment based on its ID.
     @GetMapping("/detail/{paymentId}")
     public String showPaymentDetail(@PathVariable String paymentId, Model model) {
         Payment payment = paymentService.getPayment(paymentId);
         model.addAttribute("payment", payment);
-        return "PaymentDetailResult"; // Template to display payment details.
+        return "PaymentDetailResult";  // Template to display payment details.
     }
 
     // GET /payment/admin/list
-    // Shows all payments (for admin purposes).
+    // Shows all payments (for admin).
     @GetMapping("/admin/list")
     public String showAllPayments(Model model) {
         model.addAttribute("payments", paymentService.getAllPayments());
-        return "PaymentAdminList"; // Template to list all payments.
+        return "PaymentAdminList";  // Template for admin payment list.
     }
 
     // GET /payment/admin/detail/{paymentId}
-    // Displays payment details along with options for admin to reject/accept payment.
+    // Shows details of a payment for admin with options to reject/accept.
     @GetMapping("/admin/detail/{paymentId}")
     public String showPaymentAdminDetail(@PathVariable String paymentId, Model model) {
         Payment payment = paymentService.getPayment(paymentId);
         model.addAttribute("payment", payment);
-        return "PaymentAdminDetail"; // Template with payment details and admin options.
+        return "PaymentAdminDetail";  // Template with payment details and admin options.
     }
 
     // POST /payment/admin/set-status/{paymentId}
-    // Sets the status of a payment based on its ID and the provided status option.
+    // Sets the status of a payment based on its ID and provided status option.
     @PostMapping("/admin/set-status/{paymentId}")
     public String setPaymentStatus(@PathVariable String paymentId,
                                    @RequestParam("status") String status,
                                    Model model) {
         Payment payment = paymentService.getPayment(paymentId);
         if (payment == null) {
-            // Redirect to the admin list if the payment is not found.
             return "redirect:/payment/admin/list";
         }
         Payment updatedPayment = paymentService.setStatus(payment, status);
         model.addAttribute("payment", updatedPayment);
-        return "PaymentStatusResult"; // Template showing updated payment status.
+        return "PaymentStatusResult";  // Template showing updated payment status.
     }
 }
