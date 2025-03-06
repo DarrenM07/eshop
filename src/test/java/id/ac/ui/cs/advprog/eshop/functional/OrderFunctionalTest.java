@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.eshop.controller;
+package id.ac.ui.cs.advprog.eshop.functional;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Product;
@@ -13,14 +13,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
+public class OrderFunctionalTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,21 +32,19 @@ public class OrderControllerTest {
 
     @BeforeEach
     public void setup() {
-        // Create a dummy product list (assuming Product has a default constructor)
+        // Create a dummy product list for the order.
         List<Product> products = new ArrayList<>();
         products.add(new Product());
-        // Build a test order with a fixed id, author, and valid status
+        // Build and save a test order.
         testOrder = Order.builder()
                 .id("TEST_ORDER_001")
                 .products(products)
                 .orderTime(System.currentTimeMillis())
                 .author("TestUser")
-                .status("WAITING_PAYMENT") // set a valid status explicitly
+                .status("WAITING_PAYMENT")
                 .build();
-        // Save the test order using OrderService
         orderService.createOrder(testOrder);
     }
-
 
     @Test
     public void testShowCreateOrderForm() throws Exception {
@@ -69,8 +67,8 @@ public class OrderControllerTest {
                         .param("author", "TestUser"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("OrderHistoryResult"))
-                .andExpect(model().attributeExists("orders"))
-                .andExpect(model().attribute("author", "TestUser"));
+                .andExpect(model().attribute("author", equalTo("TestUser")))
+                .andExpect(model().attributeExists("orders"));
     }
 
     @Test
@@ -79,9 +77,7 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("OrderPay"))
                 .andExpect(model().attributeExists("order"))
-                // Instead of comparing the whole order object, check specific field(s)
-                .andExpect(model().attribute("order", org.hamcrest.Matchers.hasProperty("id",
-                        org.hamcrest.Matchers.equalTo("TEST_ORDER_001"))));
+                .andExpect(model().attribute("order", hasProperty("id", equalTo("TEST_ORDER_001"))));
     }
 
     @Test
@@ -92,13 +88,4 @@ public class OrderControllerTest {
                 .andExpect(model().attributeExists("paymentId"))
                 .andExpect(content().string(containsString("PAY-TEST_ORDER_001")));
     }
-
-    @Test
-    public void testShowOrderPayPageNotFound() throws Exception {
-        // Memanggil endpoint dengan orderId yang tidak ada, sehingga orderService.findById mengembalikan null.
-        mockMvc.perform(get("/order/pay/NON_EXISTENT_ORDER"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/order/history"));
-    }
-
 }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import enums.PaymentMethod;
+import enums.OrderStatus;
+
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Product;
@@ -144,5 +146,53 @@ class PaymentServiceImplTest {
     void testSetStatusToInvalidStatus() {
         Payment payment = payments.get(1);
         assertThrows(IllegalArgumentException.class, () -> paymentService.setStatus(payment, "MEOW"));
+    }
+
+    @Test
+    void testSetStatusCheckPayment() {
+        // Using the first payment and order from the setup.
+        Payment payment = payments.get(0);
+        Order order = orders.get(0);
+
+        // Setup mocks for repository calls.
+        doReturn(payment).when(paymentRepository).save(any(Payment.class));
+        doReturn(order).when(orderRepository).findById(payment.getId());
+        doReturn(order).when(orderRepository).save(any(Order.class));
+
+        // Set status to CHECK_PAYMENT which should map to WAITING_PAYMENT.
+        Payment result = paymentService.setStatus(payment, PaymentStatus.CHECK_PAYMENT.getValue());
+
+        // Verify interactions.
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        verify(orderRepository, times(1)).findById(payment.getId());
+        verify(orderRepository, times(1)).save(any(Order.class));
+
+        // Assert that payment status remains as CHECK_PAYMENT and order status is updated accordingly.
+        assertEquals(PaymentStatus.CHECK_PAYMENT.getValue(), result.getStatus());
+        assertEquals(OrderStatus.WAITING_PAYMENT.getValue(), order.getStatus());
+    }
+
+    @Test
+    void testSetStatusToInvalidStatusWithExistingOrder() {
+        Payment payment = spy(payments.get(1));
+        Order order = orders.get(1);
+
+        // Override setStatus di Payment agar tidak melakukan validasi
+        doNothing().when(payment).setStatus(anyString());
+
+        // Stub repository sesuai kebutuhan.
+        doReturn(payment).when(paymentRepository).save(any(Payment.class));
+
+        // Simpan id payment ke variabel agar tidak memicu pemanggilan langsung saat stubbing.
+        String paymentId = payment.getId();
+        doReturn(order).when(orderRepository).findById(paymentId);
+
+        // Karena status "MEOW" tidak valid, seharusnya checkStatus melempar IllegalArgumentException.
+        assertThrows(IllegalArgumentException.class, () ->
+                paymentService.setStatus(payment, "MEOW")
+        );
+
+        // Verifikasi bahwa findById dipanggil dengan ID payment yang sesuai.
+        verify(orderRepository, times(1)).findById(paymentId);
     }
 }

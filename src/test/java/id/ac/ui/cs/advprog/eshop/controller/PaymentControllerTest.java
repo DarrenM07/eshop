@@ -103,4 +103,15 @@ public class PaymentControllerTest {
                 .andExpect(model().attributeExists("payment"))
                 .andExpect(model().attribute("payment", hasProperty("status", equalTo("SUCCESS"))));
     }
+
+    @Test
+    public void testSetPaymentStatusPaymentNotFound() throws Exception {
+        // Gunakan paymentId yang tidak ada agar paymentService.getPayment(paymentId) mengembalikan null.
+        String nonExistentPaymentId = "non-existent";
+        mockMvc.perform(post("/payment/admin/set-status/" + nonExistentPaymentId)
+                        .param("status", "SUCCESS"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/payment/admin/list"));
+    }
+
 }

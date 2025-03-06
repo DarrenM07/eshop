@@ -68,4 +68,16 @@ public class PaymentTest {
         payment.setStatus("REJECTED");
         assertEquals("REJECTED", payment.getStatus());
     }
+
+    @Test
+    public void testCreatePaymentInvalidMethod() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("VoucherCode", "ESHOP1234ABC5678");
+        // "INVALID_METHOD" is not a valid PaymentMethod, so the Payment constructor
+        // should call setMethod, which throws an IllegalArgumentException.
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Payment("3", "INVALID_METHOD", paymentData);
+        });
+    }
+
 }

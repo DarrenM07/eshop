@@ -212,4 +212,19 @@ class ProductRepositoryTest {
         assertEquals("first-id", remaining.getProductId());
         assertFalse(productIterator.hasNext(), "No more products should remain");
     }
+
+    @Test
+    void testFindByIdReturnsNull() {
+        // Buat sebuah produk dan simpan ke repository (walaupun method findById tidak menggunakannya)
+        Product product = new Product();
+        product.setProductId("test-id");
+        product.setProductName("Test Product");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        // Karena findById belum diimplementasikan, hasilnya harus selalu null.
+        assertNull(productRepository.findById("test-id"),
+                "findById harus mengembalikan null karena belum diimplementasikan");
+    }
+
 }
